@@ -1,0 +1,19 @@
+.requests ion-card-content {
+  padding-bottom: 0px;
+}
+
+.requests ion-card-subtitle {
+  display: flex;
+  align-items: center;
+}
+
+.requests ion-card-subtitle ion-button {
+  margin-left: 8px;
+}
+
+.requests-card-chips {
+  margin-top: 8px;
+}
+.requests-card-chips ion-chip:first-child {
+  margin-left: 0px;
+}

@@ -1,0 +1,13 @@
+{
+  "plugins": ["prettier-plugin-import-sort"],
+  "importOrder": [
+    "^react$",
+    "^@?\\w",
+    "^[./]",
+    "<THIRD_PARTY_MODULES>",
+    "^@my-org/.*$",
+    "^src/.*$"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}
