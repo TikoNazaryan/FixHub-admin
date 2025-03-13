@@ -54,7 +54,7 @@ const Offers: React.FC = () => {
         <Container>
           {offers?.map((offer) => {
             return (
-              <IonCard>
+              <IonCard key={offer.id}>
                 <IonCardHeader>
                   <IonCardTitle>
                     {offer.part_number} ({offer.condition})
