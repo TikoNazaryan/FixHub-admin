@@ -22,6 +22,19 @@ export interface ICarModel {
   deleted_at: string;
 }
 
+export interface IOffer {
+  id: number;
+  request_id: number;
+  user_id: number;
+  price: string;
+  part_number: string;
+  condition: string;
+  status: string;
+  deleted_at: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface ICar {
   id: number;
   name: string;
@@ -31,33 +44,21 @@ export interface ICar {
 export interface StoreContextType {
   isTokenSet?: boolean;
   onSetIsTokenSet: (token?: boolean) => void;
-  darkMode: boolean;
-  onSetDarkMode: (mode: boolean) => void;
-  cars?: ICar[];
-  onSetCars: (cars: ICar[]) => void;
-  seller?: ISeller;
-  onSetSeller: (seller: ISeller) => void;
-  sellerCars?: ICar[];
-  onSetSellerCars: (cars: ICar[]) => void;
+  offers?: IOffer[];
+  onSetOffers: (requests: IOffer[]) => void;
 }
 
 export const StoreContext = createContext<StoreContextType>({
   isTokenSet: undefined,
   onSetIsTokenSet: () => {},
-  darkMode: false,
-  onSetDarkMode: () => {},
-  cars: undefined,
-  onSetCars: () => {},
-  seller: undefined,
-  onSetSeller: () => {},
-  sellerCars: undefined,
-  onSetSellerCars: () => {},
+  offers: undefined,
+  onSetOffers: () => {},
 });
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const { onGetStorage, onSetStorage } = useStorage();
+  const { onGetStorage } = useStorage();
 
   /* -- Token -- */
   const [isTokenSet, setIsTokenSet] = useState<boolean>();
@@ -73,47 +74,10 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
     })();
   }, [onGetStorage]);
 
-  /* -- Dark Mode -- */
-  const [darkMode, setDarkMode] = useState<StoreContextType["darkMode"]>(false);
-  const onSetDarkMode: StoreContextType["onSetDarkMode"] = (mode) => {
-    document.documentElement.classList.toggle("ion-palette-dark", mode);
-    onSetStorage(STORAGE_KEY.IS_DARK, mode ? "true" : "false");
-    setDarkMode(mode);
-  };
-
-  useEffect(() => {
-    (async () => {
-      const isStorageDark = await onGetStorage(STORAGE_KEY.IS_DARK);
-      if (isStorageDark === null) {
-        const isPrefersDark = window.matchMedia("(prefers-color-scheme: dark)");
-        onSetStorage(
-          STORAGE_KEY.IS_DARK,
-          isPrefersDark.matches ? "true" : "false"
-        );
-        onSetDarkMode(isPrefersDark.matches);
-      } else {
-        onSetDarkMode(isStorageDark === "true");
-      }
-    })();
-  }, []);
-
-  /* -- All car models -- */
-  const [cars, setCars] = useState<StoreContextType["cars"]>();
-  const onSetCars: StoreContextType["onSetCars"] = (cars) => {
-    setCars(cars);
-  };
-
-  /* -- Seller car models -- */
-  const [sellerCars, setSellerCars] =
-    useState<StoreContextType["sellerCars"]>();
-  const onSetSellerCars: StoreContextType["onSetSellerCars"] = (cars) => {
-    setSellerCars(cars);
-  };
-
-  /* -- Seller car models -- */
-  const [seller, setSeller] = useState<StoreContextType["seller"]>();
-  const onSetSeller: StoreContextType["onSetSeller"] = (seller) => {
-    setSeller(seller);
+  /* -- All seller offers -- */
+  const [offers, setOffers] = useState<StoreContextType["offers"]>();
+  const onSetOffers: StoreContextType["onSetOffers"] = (offers) => {
+    setOffers(offers);
   };
 
   return (
@@ -121,14 +85,8 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
       value={{
         isTokenSet,
         onSetIsTokenSet,
-        darkMode,
-        onSetDarkMode,
-        cars,
-        onSetCars,
-        seller,
-        onSetSeller,
-        sellerCars,
-        onSetSellerCars,
+        offers,
+        onSetOffers,
       }}
     >
       {children}

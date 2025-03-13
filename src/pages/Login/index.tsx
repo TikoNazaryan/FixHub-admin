@@ -14,7 +14,6 @@ import {
 
 import "./index.css";
 import { useState } from "react";
-import { useMaskito } from "@maskito/react";
 import { warningOutline } from "ionicons/icons";
 import { STORAGE_KEY, useStorage } from "@hooks/useStorage";
 import Container from "@components/Container";
@@ -24,6 +23,8 @@ import { ROUTES } from "../../AppRouter";
 import { StoreContext } from "@store/Store";
 import { Redirect } from "react-router";
 import api from "@api/api";
+import { phoneMaskPattern } from "@utils/phone";
+import { useMaskito } from "@maskito/react";
 
 const Login: React.FC = () => {
   const [phoneInput, setPhoneInput] = useState("");
@@ -62,27 +63,10 @@ const Login: React.FC = () => {
     setIsLoading(false);
   };
 
-  const phoneMask = useMaskito({
-    options: {
-      mask: [
-        "0",
-        /\d/,
-        /\d/,
-        " ",
-        /\d/,
-        /\d/,
-        " ",
-        /\d/,
-        /\d/,
-        " ",
-        /\d/,
-        /\d/,
-      ],
-    },
-  });
+  const phoneMask = useMaskito(phoneMaskPattern);
 
   if (isTokenSet) {
-    return <Redirect to={ROUTES.REQUESTS} />;
+    return <Redirect to={ROUTES.SELLERS} />;
   }
 
   return (
@@ -126,13 +110,6 @@ const Login: React.FC = () => {
               ) : (
                 "Մուտք"
               )}
-            </IonButton>
-            <IonButton
-              fill="clear"
-              color={"dark"}
-              routerLink={ROUTES.REGISTRATION}
-            >
-              Գրանցում
             </IonButton>
           </div>
         </Container>

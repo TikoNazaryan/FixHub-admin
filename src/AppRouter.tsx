@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   IonIcon,
   IonLabel,
@@ -9,24 +9,18 @@ import {
   IonTabs,
 } from "@ionic/react";
 import { Redirect, Route, useLocation } from "react-router";
-import { personCircle, caretDownCircle, caretUpCircle } from "ionicons/icons";
-import { useEffect } from "react";
+import { peopleCircleOutline, caretUpCircle } from "ionicons/icons";
 import Login from "@pages/Login";
-import Registration from "@pages/Registration";
-import Cars from "@pages/Cars";
-import Account from "@pages/Account";
-import Offers from "@pages/Offers";
-import Requests from "@pages/Requests";
-import { STORAGE_KEY, useStorage } from "@hooks/useStorage";
+import Sellers from "@pages/Sellers";
 import { StoreContext } from "@store/Store";
+import Seller from "@pages/Seller";
+import Offers from "@pages/Offers";
 
 export const ROUTES = {
   LOGIN: "/login",
-  REGISTRATION: "/registration",
-  REQUESTS: "/requests",
+  SELLERS: "/sellers",
+  SELLER: "/seller/:id",
   OFFERS: "/offers",
-  ACCOUNT: "/account",
-  CARS: "/cars",
 };
 
 interface ProtectedRouteProps {
@@ -53,7 +47,17 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 const AppRouter: React.FC = () => {
   const { isTokenSet } = useContext(StoreContext);
   const location = useLocation();
-  const hideTabsOnRoutes = [ROUTES.LOGIN, ROUTES.REGISTRATION];
+  const hideTabsOnRoutes = [ROUTES.LOGIN];
+
+  useEffect(() => {
+    (async () => {
+      const isPrefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+      document.documentElement.classList.toggle(
+        "ion-palette-dark",
+        isPrefersDark.matches
+      );
+    })();
+  }, []);
 
   if (isTokenSet === undefined) {
     return (
@@ -66,29 +70,21 @@ const AppRouter: React.FC = () => {
       <IonTabs>
         <IonRouterOutlet>
           <Route path={ROUTES.LOGIN} exact component={Login} />
-          <Route path={ROUTES.REGISTRATION} exact component={Registration} />
-          <ProtectedRoute path={ROUTES.REQUESTS} exact component={Requests} />
+          <ProtectedRoute path={ROUTES.SELLERS} exact component={Sellers} />
+          <ProtectedRoute path={ROUTES.SELLER} exact component={Seller} />
           <ProtectedRoute path={ROUTES.OFFERS} exact component={Offers} />
-          <ProtectedRoute path={ROUTES.ACCOUNT} exact component={Account} />
-          <ProtectedRoute path={ROUTES.CARS} exact component={Cars} />
-          <Redirect exact from="/" to={ROUTES.REQUESTS} />
+          <Redirect exact from="/" to={ROUTES.SELLERS} />
         </IonRouterOutlet>
 
         {!hideTabsOnRoutes.includes(location.pathname) && (
           <IonTabBar slot="bottom">
-            <IonTabButton tab="requests" href={ROUTES.REQUESTS}>
-              <IonIcon icon={caretDownCircle} />
-              <IonLabel>Հայց</IonLabel>
-            </IonTabButton>
-
             <IonTabButton tab="offers" href={ROUTES.OFFERS}>
-              <IonIcon icon={caretUpCircle} />
+              <IonIcon icon={peopleCircleOutline} />
               <IonLabel>Առաջարկներ</IonLabel>
             </IonTabButton>
-
-            <IonTabButton tab="account" href={ROUTES.ACCOUNT}>
-              <IonIcon icon={personCircle} />
-              <IonLabel>Հաշիվ</IonLabel>
+            <IonTabButton tab="sellers" href={ROUTES.SELLERS}>
+              <IonIcon icon={caretUpCircle} />
+              <IonLabel>Վաճառողներ</IonLabel>
             </IonTabButton>
           </IonTabBar>
         )}

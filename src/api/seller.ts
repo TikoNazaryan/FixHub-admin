@@ -1,27 +1,31 @@
 import api, { ApiResponse, ENDPOINTS } from "@api//api";
+import { ISeller } from "@store/Store";
 
-import { ICar, ISeller } from "../store/Store";
+export interface IGetSellerPayolad {
+  id: string;
+}
 
 export interface IGetSellerResponse {
-  user: ISeller;
+  user: ISeller | undefined;
 }
 
-export interface IGetSellerCarsResponse {
-  cars: ICar[];
+export interface IUpdateSellerPayolad {
+  id: string;
+  name: string;
+  address: string;
+  phone: string;
 }
 
-export interface IUpdateSellerCarsPayload {
-  model_ids: number[];
-}
-
-export interface IUpdateSellerCarsResponse {
+export interface IUpdateSellerResponse {
   status: string;
 }
 
-export const getSeller = async (): Promise<IGetSellerResponse> => {
+export const getSeller = async (
+  payload: IGetSellerPayolad
+): Promise<IGetSellerResponse> => {
   try {
     const response = await api.get<ApiResponse<IGetSellerResponse>>(
-      ENDPOINTS.SELLER
+      ENDPOINTS.SELLER.replace(":id", payload.id)
     );
 
     return { user: response.data.body.user };
@@ -29,40 +33,20 @@ export const getSeller = async (): Promise<IGetSellerResponse> => {
     console.error(e);
   }
 
-  return {
-    user: {
-      id: 0,
-      name: "",
-      address: "",
-      phone: "",
-      created_at: "",
-      updated_at: "",
-      deleted_at: "",
-    },
-  };
+  return { user: undefined };
 };
 
-export const getSellerCars = async (): Promise<IGetSellerCarsResponse> => {
+export const updateSeller = async (
+  payload: IUpdateSellerPayolad
+): Promise<IUpdateSellerResponse> => {
   try {
-    const response = await api.get<ApiResponse<IGetSellerCarsResponse>>(
-      ENDPOINTS.SELLER_CARS
-    );
-
-    return { cars: response.data.body.cars };
-  } catch (e) {
-    console.error(e);
-  }
-
-  return { cars: [] };
-};
-
-export const updateSellerCars = async (
-  payload: IUpdateSellerCarsPayload
-): Promise<IUpdateSellerCarsResponse> => {
-  try {
-    await api.post<ApiResponse<IUpdateSellerCarsResponse>>(
-      ENDPOINTS.SELLER_CARS,
-      { model_ids: payload.model_ids }
+    await api.put<ApiResponse<IUpdateSellerResponse>>(
+      ENDPOINTS.SELLER.replace(":id", payload.id),
+      {
+        name: payload.name,
+        address: payload.address,
+        phone: payload.phone,
+      }
     );
 
     return { status: "updated" };

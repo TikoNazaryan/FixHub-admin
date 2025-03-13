@@ -13,9 +13,8 @@ export type ApiResponse<T> = {
 
 export const ENDPOINTS = {
   TOKEN: "/auth/token",
-  SELLER: "/seller",
-  SELLER_CARS: "/seller/cars",
-  CARS: "/cars",
+  SELLER: "/admin/seller/:id",
+  OFFER: "/offer",
 };
 
 const api = axios.create({
