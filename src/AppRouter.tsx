@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
-  IonHeader,
   IonIcon,
   IonLabel,
   IonLoading,
-  IonNav,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
