@@ -1,0 +1,8 @@
+ion-tab-bar {
+  -webkit-justify-content: left !important;
+  justify-content: left !important;
+}
+
+ion-tab-button {
+  max-width: fit-content;
+}
