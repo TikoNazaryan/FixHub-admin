@@ -27,7 +27,7 @@ export const ROUTES = {
   SELLERS: "/sellers",
   SELLER: "/seller/:id",
   OFFERS: "/offers",
-  APPROVEDOFFERS: "/approved-offers",
+  APPROVED_OFFERS: "/approved-offers",
 };
 
 interface ProtectedRouteProps {
@@ -91,7 +91,7 @@ const AppRouter: React.FC = () => {
             </IonTabButton>
             <IonTabButton
               tab="approved-offers"
-              href={ROUTES.APPROVEDOFFERS}
+              href={ROUTES.APPROVED_OFFERS}
               layout="icon-start"
             >
               <IonIcon icon={checkmarkOutline} />
