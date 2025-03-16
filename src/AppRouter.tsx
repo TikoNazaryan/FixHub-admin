@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  IonBadge,
   IonIcon,
   IonLabel,
   IonLoading,
@@ -52,7 +53,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 };
 
 const AppRouter: React.FC = () => {
-  const { isTokenSet } = useContext(StoreContext);
+  const { isTokenSet, pendingOffers } = useContext(StoreContext);
   const location = useLocation();
   const hideTabsOnRoutes = [ROUTES.LOGIN];
 
@@ -88,6 +89,7 @@ const AppRouter: React.FC = () => {
             <IonTabButton tab="offers" href={ROUTES.OFFERS} layout="icon-start">
               <IonIcon icon={timerOutline} />
               <IonLabel>Սպասվող Առաջարկներ</IonLabel>
+              {!!pendingOffers && <IonBadge>{pendingOffers.length}</IonBadge>}
             </IonTabButton>
             <IonTabButton
               tab="approved-offers"
