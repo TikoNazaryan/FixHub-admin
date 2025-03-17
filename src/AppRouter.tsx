@@ -15,6 +15,7 @@ import {
   caretUpCircle,
   timerOutline,
   checkmarkOutline,
+  exitOutline,
 } from "ionicons/icons";
 import Login from "@pages/Login";
 import Sellers from "@pages/Sellers";
@@ -22,6 +23,9 @@ import { StoreContext } from "@store/Store";
 import Seller from "@pages/Seller";
 import Offers from "@pages/Offers";
 import "./index.css";
+import ApprovedOfers from "@pages/ApprovedOfers";
+import { STORAGE_KEY, useStorage } from "@hooks/useStorage";
+import Request from "@pages/Request";
 
 export const ROUTES = {
   LOGIN: "/login",
@@ -29,6 +33,7 @@ export const ROUTES = {
   SELLER: "/seller/:id",
   OFFERS: "/offers",
   APPROVED_OFFERS: "/approved-offers",
+  REQUEST: "/requst/:id",
 };
 
 interface ProtectedRouteProps {
@@ -54,6 +59,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
 const AppRouter: React.FC = () => {
   const { isTokenSet, pendingOffers } = useContext(StoreContext);
+  const { onRemoveStorage } = useStorage();
   const location = useLocation();
   const hideTabsOnRoutes = [ROUTES.LOGIN];
 
@@ -81,11 +87,17 @@ const AppRouter: React.FC = () => {
           <ProtectedRoute path={ROUTES.SELLERS} exact component={Sellers} />
           <ProtectedRoute path={ROUTES.SELLER} exact component={Seller} />
           <ProtectedRoute path={ROUTES.OFFERS} exact component={Offers} />
+          <ProtectedRoute path={ROUTES.REQUEST} exact component={Request} />
+          <ProtectedRoute
+            path={ROUTES.APPROVED_OFFERS}
+            exact
+            component={ApprovedOfers}
+          />
           <Redirect exact from="/" to={ROUTES.SELLERS} />
         </IonRouterOutlet>
 
         {!hideTabsOnRoutes.includes(location.pathname) && (
-          <IonTabBar slot="top" style={{}}>
+          <IonTabBar slot="top">
             <IonTabButton tab="offers" href={ROUTES.OFFERS} layout="icon-start">
               <IonIcon icon={timerOutline} />
               <IonLabel>Սպասվող Առաջարկներ</IonLabel>
@@ -106,6 +118,17 @@ const AppRouter: React.FC = () => {
             >
               <IonIcon icon={caretUpCircle} />
               <IonLabel>Վաճառողներ</IonLabel>
+            </IonTabButton>
+            <IonTabButton
+              tab="logOut"
+              layout="icon-start"
+              className="log-out"
+              onClick={() => {
+                onRemoveStorage(STORAGE_KEY.TOKEN);
+              }}
+            >
+              <IonIcon icon={exitOutline} />
+              <IonLabel>Դուրս գալ</IonLabel>
             </IonTabButton>
           </IonTabBar>
         )}

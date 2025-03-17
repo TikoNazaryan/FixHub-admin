@@ -11,3 +11,8 @@ ion-tab-button {
 ion-tab-button {
   max-width: fit-content;
 }
+
+.log-out {
+  margin-left: auto;
+  --color: #ff3c3c;
+}

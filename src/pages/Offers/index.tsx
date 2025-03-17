@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  IonAccordion,
+  IonAccordionGroup,
   IonButton,
   IonCard,
   IonCardContent,
@@ -9,8 +11,11 @@ import {
   IonChip,
   IonContent,
   IonHeader,
+  IonItem,
+  IonLabel,
   IonLoading,
   IonPage,
+  IonText,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -38,34 +43,40 @@ const Offers: React.FC = () => {
           message="Loading..."
           spinner="circles"
         />
-        <Container>
+        <IonAccordionGroup>
           {pendingOffers?.map((offer) => {
             return (
-              <IonCard key={offer.id}>
-                <IonCardHeader>
-                  <IonCardTitle>
+              <IonAccordion key={offer.id} value={`${offer.id}`}>
+                <IonItem slot="header" color="light">
+                  <IonLabel>
+                    {" "}
                     {offer.part_number} ({offer.condition})
-                  </IonCardTitle>
-                  <IonCardSubtitle>{offer.price}</IonCardSubtitle>
-                </IonCardHeader>
-
-                <IonCardContent>
+                  </IonLabel>
+                </IonItem>
+                <IonItem slot="content">
+                  <IonLabel>{offer.price}</IonLabel>
                   <IonChip color="primary">{offer.status}</IonChip>
-                </IonCardContent>
-                <IonButton fill="clear" onClick={() => onApprove()}>
-                  Հաստատել
-                </IonButton>
-                <IonButton
-                  fill="clear"
-                  color="danger"
-                  onClick={() => onReject()}
-                >
-                  Մերժել
-                </IonButton>
-              </IonCard>
+
+                  <IonButton
+                    fill="clear"
+                    onClick={() => onApprove()}
+                    slot="end"
+                  >
+                    Հաստատել
+                  </IonButton>
+                  <IonButton
+                    fill="clear"
+                    color="danger"
+                    slot="end"
+                    onClick={() => onReject()}
+                  >
+                    Մերժել
+                  </IonButton>
+                </IonItem>
+              </IonAccordion>
             );
           })}
-        </Container>
+        </IonAccordionGroup>
       </IonContent>
     </IonPage>
   );

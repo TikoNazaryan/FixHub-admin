@@ -8,6 +8,9 @@ export interface IGetSellerPayolad {
 export interface IGetSellerResponse {
   user: ISeller | undefined;
 }
+export interface IGetAllSellersResponse {
+  sellers: ISeller[];
+}
 
 export interface IUpdateSellerPayolad {
   id: string;
@@ -35,6 +38,19 @@ export const getSeller = async (
 
   return { user: undefined };
 };
+export const getAllSellers = async (): Promise<IGetAllSellersResponse> => {
+  try {
+    const response = await api.get<ApiResponse<IGetAllSellersResponse>>(
+      ENDPOINTS.SELLERS
+    );
+
+    return { sellers: response.data.body.sellers };
+  } catch (e) {
+    console.error(e);
+  }
+
+  return { sellers: [] };
+};
 
 export const updateSeller = async (
   payload: IUpdateSellerPayolad
@@ -46,6 +62,29 @@ export const updateSeller = async (
         name: payload.name,
         address: payload.address,
         phone: payload.phone,
+      }
+    );
+
+    return { status: "updated" };
+  } catch (e) {
+    console.error(e);
+  }
+
+  return { status: "" };
+};
+
+export const createSeller = async (
+  payload: Omit<IUpdateSellerPayolad, "id"> & { password: string }
+): Promise<IUpdateSellerResponse> => {
+  try {
+    await api.post<ApiResponse<IUpdateSellerResponse>>(
+      ENDPOINTS.SELLER.replace("/:id", ""),
+      {
+        name: payload.name,
+        address: payload.address,
+        phone: payload.phone,
+        role: "seller",
+        password: payload.password,
       }
     );
 
