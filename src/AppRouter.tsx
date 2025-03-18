@@ -21,7 +21,7 @@ import Login from "@pages/Login";
 import Sellers from "@pages/Sellers";
 import { StoreContext } from "@store/Store";
 import Seller from "@pages/Seller";
-import Offers from "@pages/Offers";
+import Requests from "@pages/Requests";
 import "./index.css";
 import ApprovedOfers from "@pages/ApprovedOfers";
 import { STORAGE_KEY, useStorage } from "@hooks/useStorage";
@@ -31,8 +31,8 @@ export const ROUTES = {
   LOGIN: "/login",
   SELLERS: "/sellers",
   SELLER: "/seller/:id",
-  OFFERS: "/offers",
-  APPROVED_OFFERS: "/approved-offers",
+  REQUESTS: "/requests",
+  APPROVED_Requests: "/approved-Requests",
   REQUEST: "/requst/:id",
 };
 
@@ -58,7 +58,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 };
 
 const AppRouter: React.FC = () => {
-  const { isTokenSet, pendingOffers } = useContext(StoreContext);
+  const { isTokenSet, pendingRequests } = useContext(StoreContext);
   const { onRemoveStorage } = useStorage();
   const location = useLocation();
   const hideTabsOnRoutes = [ROUTES.LOGIN];
@@ -86,10 +86,10 @@ const AppRouter: React.FC = () => {
           <Route path={ROUTES.LOGIN} exact component={Login} />
           <ProtectedRoute path={ROUTES.SELLERS} exact component={Sellers} />
           <ProtectedRoute path={ROUTES.SELLER} exact component={Seller} />
-          <ProtectedRoute path={ROUTES.OFFERS} exact component={Offers} />
+          <ProtectedRoute path={ROUTES.REQUESTS} exact component={Requests} />
           <ProtectedRoute path={ROUTES.REQUEST} exact component={Request} />
           <ProtectedRoute
-            path={ROUTES.APPROVED_OFFERS}
+            path={ROUTES.APPROVED_Requests}
             exact
             component={ApprovedOfers}
           />
@@ -98,14 +98,20 @@ const AppRouter: React.FC = () => {
 
         {!hideTabsOnRoutes.includes(location.pathname) && (
           <IonTabBar slot="top">
-            <IonTabButton tab="offers" href={ROUTES.OFFERS} layout="icon-start">
+            <IonTabButton
+              tab="Requests"
+              href={ROUTES.REQUESTS}
+              layout="icon-start"
+            >
               <IonIcon icon={timerOutline} />
               <IonLabel>Սպասվող Առաջարկներ</IonLabel>
-              {!!pendingOffers && <IonBadge>{pendingOffers.length}</IonBadge>}
+              {pendingRequests && pendingRequests.length > 0 && (
+                <IonBadge>{pendingRequests.length}</IonBadge>
+              )}
             </IonTabButton>
             <IonTabButton
-              tab="approved-offers"
-              href={ROUTES.APPROVED_OFFERS}
+              tab="approved-Requests"
+              href={ROUTES.APPROVED_Requests}
               layout="icon-start"
             >
               <IonIcon icon={checkmarkOutline} />

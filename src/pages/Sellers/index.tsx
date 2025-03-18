@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
   IonButton,
   IonContent,
+  IonFab,
+  IonFabButton,
   IonHeader,
   IonIcon,
   IonItem,
@@ -16,7 +18,7 @@ import {
 import Container from "@components/Container";
 import "./index.css";
 import { ROUTES } from "./../../AppRouter";
-import { addOutline } from "ionicons/icons";
+import { add, addOutline } from "ionicons/icons";
 import { ISeller } from "@store/Store";
 import { getAllSellers } from "@api/seller";
 
@@ -100,14 +102,14 @@ const Sellers: React.FC = () => {
           </IonList>
         </Container>
 
-        <IonButton
-          className="ripple-parent circle"
-          routerLink={ROUTES.SELLER.replace(":id", String("create-seller"))}
-        >
-          <IonIcon icon={addOutline} size="large"></IonIcon>
-
-          <IonRippleEffect></IonRippleEffect>
-        </IonButton>
+        <IonFab slot="fixed" vertical="bottom" horizontal="end">
+          <IonFabButton
+            color={"dark"}
+            routerLink={ROUTES.SELLER.replace(":id", String("create-seller"))}
+          >
+            <IonIcon icon={add}></IonIcon>
+          </IonFabButton>
+        </IonFab>
       </IonContent>
     </IonPage>
   );

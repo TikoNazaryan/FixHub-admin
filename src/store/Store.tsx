@@ -1,5 +1,5 @@
 import api from "@api/api";
-import { getOffers } from "@api/offer";
+import { getRequsts } from "@api/requests";
 import { STORAGE_KEY, useStorage } from "@hooks/useStorage";
 import React, { createContext, useState, ReactNode, useEffect } from "react";
 export enum Status {
@@ -37,8 +37,34 @@ export interface IOffer {
   deleted_at: string;
   created_at: string;
   updated_at: string;
+  images: IImage[];
 }
-
+export interface IImage {
+  id: number;
+  request_id: number;
+  image_path: string;
+  created_at: string;
+  updated_at: string;
+}
+export interface IRequest {
+  id: number;
+  brand_id: number;
+  model_id: number;
+  user_id: number;
+  user_phone: string;
+  user_hash: string;
+  vin: string;
+  deleted_at: string;
+  created_at: string;
+  updated_at: string;
+  description: string;
+  status: Status;
+  brand: ICar;
+  model: ICarModel;
+  user: ISeller;
+  offers: IOffer[];
+  images: IImage[];
+}
 export interface ICar {
   id: number;
   name: string;
@@ -48,19 +74,19 @@ export interface ICar {
 export interface StoreContextType {
   isTokenSet?: boolean;
   onSetIsTokenSet: (token?: boolean) => void;
-  pendingOffers?: IOffer[];
-  approvedOffers?: IOffer[];
-  onSetPendingOffers: (requests: IOffer[]) => void;
-  onSetApprovedOffers: (requests: IOffer[]) => void;
+  pendingRequests?: IRequest[];
+  approvedRequests?: IRequest[];
+  onSetPendingRequests: (requests: IRequest[]) => void;
+  onSetApprovedRequests: (requests: IRequest[]) => void;
 }
 
 export const StoreContext = createContext<StoreContextType>({
   isTokenSet: undefined,
   onSetIsTokenSet: () => {},
-  pendingOffers: undefined,
-  approvedOffers: undefined,
-  onSetPendingOffers: () => {},
-  onSetApprovedOffers: () => {},
+  pendingRequests: undefined,
+  approvedRequests: undefined,
+  onSetPendingRequests: () => {},
+  onSetApprovedRequests: () => {},
 });
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
@@ -73,20 +99,22 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
   const onSetIsTokenSet: StoreContextType["onSetIsTokenSet"] = (token) => {
     setIsTokenSet(token);
   };
-  /* -- All seller offers -- */
-  const [pendingOffers, setPendingOffers] =
-    useState<StoreContextType["pendingOffers"]>();
-  const [approvedOffers, setApprovedOffers] =
-    useState<StoreContextType["approvedOffers"]>();
-  const onSetPendingOffers: StoreContextType["onSetPendingOffers"] = (
-    offers
+  /* -- All seller Requests -- */
+  const [pendingRequests, setPendingRequests] =
+    useState<StoreContextType["pendingRequests"]>();
+  const [approvedRequests, setApprovedRequests] =
+    useState<StoreContextType["approvedRequests"]>();
+  const onSetPendingRequests: StoreContextType["onSetPendingRequests"] = (
+    requests
   ) => {
-    setPendingOffers(offers);
+    console.log(requests);
+
+    setPendingRequests(requests);
   };
-  const onSetApprovedOffers: StoreContextType["onSetApprovedOffers"] = (
-    offers
+  const onSetApprovedRequests: StoreContextType["onSetApprovedRequests"] = (
+    requests
   ) => {
-    setApprovedOffers(offers);
+    setApprovedRequests(requests);
   };
 
   useEffect(() => {
@@ -95,9 +123,9 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
       api.defaults.headers.common["Authorization"] = `Bearer ${storageToken}`;
       setIsTokenSet(!!storageToken);
       if (!!storageToken) {
-        const { offers } = await getOffers();
-        onSetPendingOffers(
-          offers
+        const { requests } = await getRequsts();
+        setPendingRequests(
+          requests
             ?.filter((item) => item.status === Status.pending)
             .sort(
               (a, b) =>
@@ -105,8 +133,8 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
                 new Date(a.created_at).getDate()
             )
         );
-        onSetApprovedOffers(
-          offers
+        setApprovedRequests(
+          requests
             ?.filter((item) => item.status === Status.approved)
             .sort(
               (a, b) =>
@@ -114,7 +142,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
                 new Date(a.created_at).getDate()
             )
         );
-      } 
+      }
     })();
   }, [onGetStorage]);
 
@@ -123,10 +151,10 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
       value={{
         isTokenSet,
         onSetIsTokenSet,
-        pendingOffers,
-        approvedOffers,
-        onSetPendingOffers,
-        onSetApprovedOffers,
+        pendingRequests,
+        approvedRequests,
+        onSetPendingRequests,
+        onSetApprovedRequests,
       }}
     >
       {children}

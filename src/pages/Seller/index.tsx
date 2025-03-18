@@ -63,6 +63,12 @@ const Sellers: React.FC = () => {
         address: addressInput,
         password: passwordInput,
       });
+      if (!!status) {
+        setNameInput("");
+        setAddressInput("");
+        setPasswordInput("");
+        setPhoneInput("");
+      }
       isStatus = status;
     } else {
       const { status } = await updateSeller({
@@ -175,7 +181,9 @@ const Sellers: React.FC = () => {
       </IonContent>
       <IonToast
         isOpen={!!isSellerUpdateSuccess}
-        message={"Վաճառողը հաջողությամբ թարմացվել է"}
+        message={`Վաճառողը հաջողությամբ ${
+          isCreateSeller ? "ստղծվել է" : "թարմացվել է"
+        }`}
         onDidDismiss={() => setIsSellerUpdateSuccess(false)}
         duration={5000}
         color={"success"}

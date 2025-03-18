@@ -5,6 +5,7 @@ ion-tab-bar {
 ion-tab-button {
   ion-badge {
     inset-inline-start: 100%;
+    transform: translateX(-50%);
   }
 }
 

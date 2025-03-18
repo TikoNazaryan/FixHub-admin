@@ -2,7 +2,7 @@ import { Preferences } from "@capacitor/preferences";
 import { STORAGE_KEY, useStorage } from "@hooks/useStorage";
 import axios, { AxiosError } from "axios";
 
-const API_BASE_URL =
+export const API_BASE_URL =
   "https://hotpink-alpaca-496694.hostingersite.com/fixhub/api";
 
 export type ApiResponse<T> = {
@@ -14,9 +14,13 @@ export type ApiResponse<T> = {
 export const ENDPOINTS = {
   REFRESH_TOKEN: "/auth/refresh-token",
   TOKEN: "/auth/token",
-  SELLERS:"/admin/seller",
+  SELLERS: "/admin/seller",
   SELLER: "/admin/seller/:id",
-  OFFER: "/offer",
+  REQUESTS: "/requests",
+  APPROVE_REQUEST: "/admin/request/:id/approve",
+  REJEECT_REQUEST: "/admin/request:id/reject",
+  APPROVE_OFFER: "/admin/offer/:id/approve",
+  REJEECT_OFFER: "/admin/offer:id/reject",
 };
 
 const api = axios.create({

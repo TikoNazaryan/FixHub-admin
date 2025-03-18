@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  IonAccordion,
+  IonAccordionGroup,
   IonButton,
   IonCard,
   IonCardContent,
@@ -11,6 +13,7 @@ import {
   IonHeader,
   IonImg,
   IonItem,
+  IonLabel,
   IonLoading,
   IonPage,
   IonTitle,
@@ -18,24 +21,18 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import "./index.css";
-import Container from "@components/Container";
-import { IOffer, Status, StoreContext } from "@store/Store";
-import { useParams } from "react-router";
-import { API_BASE_URL } from "@api/api";
-import { approveOffer, rejectOffer } from "@api/requests";
+import { StoreContext } from "@store/Store";
+import { approveRequest, rejectRequest } from "@api/requests";
 import { checkmarkCircleOutline } from "ionicons/icons";
+import { API_BASE_URL } from "@api/api";
 
-const Request: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-
-  const [request, setRequest] = useState<IOffer[]>([]);
+const Requests: React.FC = () => {
+  const { pendingRequests } = useContext(StoreContext);
   const [isRequetsApproved, setIsRequetsApproved] = useState(false);
   const [isRequetsReject, setIsRequetsReject] = useState(false);
-  const { approvedRequests } = useContext(StoreContext);
-
   const onApprove = async (id: number) => {
     try {
-      const reponse = await approveOffer({ id });
+      const reponse = await approveRequest({ id });
       if (reponse) {
         setIsRequetsApproved(true);
       }
@@ -46,7 +43,7 @@ const Request: React.FC = () => {
 
   const onReject = async (id: number) => {
     try {
-      const reponse = await rejectOffer({ id });
+      const reponse = await rejectRequest({ id });
       if (reponse) {
         setIsRequetsReject(true);
       }
@@ -54,12 +51,6 @@ const Request: React.FC = () => {
       console.log(err);
     }
   };
-  useEffect(() => {
-    setRequest(
-      approvedRequests?.find((item) => item.id === +id)
-        ?.offers as unknown as IOffer[]
-    );
-  }, [id, approvedRequests]);
 
   return (
     <IonPage>
@@ -69,23 +60,29 @@ const Request: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen className="ion-padding">
-        <IonLoading isOpen={!request} message="Loading..." spinner="circles" />
-        <Container>
-          {request
-            ?.filter((item) => item.status === Status.pending)
-            .map((offer) => {
-              return (
-                <IonCard key={offer.id} className="card">
+        <IonLoading
+          isOpen={!pendingRequests}
+          message="Loading..."
+          spinner="circles"
+        />
+        <IonAccordionGroup>
+          {pendingRequests?.map((request) => {
+            return (
+              <IonAccordion key={request.id} value={`${request.id}`}>
+                <IonItem slot="header" color="light">
+                  <IonLabel>
+                    {" "}
+                    {request.brand.name} ({request.model?.name})
+                  </IonLabel>
+                </IonItem>
+                <IonCard slot="content">
                   <IonCardHeader>
-                    <IonCardTitle>
-                      {" "}
-                      {offer.part_number} ({offer.condition})
-                    </IonCardTitle>
-                    <IonCardSubtitle>{offer.price}</IonCardSubtitle>
+                    <IonCardTitle>{request.vin}</IonCardTitle>
+                    <IonCardSubtitle>{request.description}</IonCardSubtitle>
                   </IonCardHeader>
                   <IonCardContent>
                     <IonItem className="content-item">
-                      {offer.images.map((item) => (
+                      {request.images.map((item) => (
                         <IonImg
                           key={item.image_path}
                           src={API_BASE_URL + "/" + item.image_path}
@@ -95,12 +92,12 @@ const Request: React.FC = () => {
                     </IonItem>
                     <IonItem className="content-item">
                       <IonChip color="primary" slot="end">
-                        {offer.status}
+                        {request.status}
                       </IonChip>
 
                       <IonButton
                         fill="clear"
-                        onClick={() => onApprove(offer.id)}
+                        onClick={() => onApprove(request.id)}
                         slot="end"
                       >
                         Հաստատել
@@ -109,16 +106,17 @@ const Request: React.FC = () => {
                         fill="clear"
                         color="danger"
                         slot="end"
-                        onClick={() => onReject(offer.id)}
+                        onClick={() => onReject(request.id)}
                       >
                         Մերժել
                       </IonButton>
                     </IonItem>
-                  </IonCardContent>{" "}
+                  </IonCardContent>
                 </IonCard>
-              );
-            })}
-        </Container>
+              </IonAccordion>
+            );
+          })}
+        </IonAccordionGroup>
       </IonContent>
       <IonToast
         isOpen={!!isRequetsApproved}
@@ -158,4 +156,4 @@ const Request: React.FC = () => {
   );
 };
 
-export default Request;
+export default Requests;

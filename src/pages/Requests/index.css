@@ -14,3 +14,12 @@
 .account-header-name {
   text-align: center;
 }
+ion-accordion {
+  ion-card {
+    margin: 0;
+    border-radius: 0;
+  }
+}
+.content-item {
+  --background: none;
+}
