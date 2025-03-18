@@ -5,9 +5,15 @@ ion-tab-bar {
 ion-tab-button {
   ion-badge {
     inset-inline-start: 100%;
+    transform: translateX(-50%);
   }
 }
 
 ion-tab-button {
   max-width: fit-content;
+}
+
+.log-out {
+  margin-left: auto;
+  --color: #ff3c3c;
 }

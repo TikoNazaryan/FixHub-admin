@@ -21,7 +21,9 @@ export const getToken = async (
       }
     );
 
-    return { token: response.data.body.token };
+    return {
+      token: response.data.body.token,
+    };
   } catch (e) {
     console.error(e);
   }
